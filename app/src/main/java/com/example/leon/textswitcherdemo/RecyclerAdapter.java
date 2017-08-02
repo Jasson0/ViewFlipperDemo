@@ -1,14 +1,12 @@
 package com.example.leon.textswitcherdemo;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -18,53 +16,41 @@ import java.util.ArrayList;
  * Created by leon on 2017/8/2.
  */
 
-public class ListAdapter extends BaseAdapter {
+public class RecyclerAdapter extends RecyclerView.Adapter{
     private ArrayList<String[]> dataList;
     private Context context;
 
-    public class ViewHolder {
-        LinearLayout mViewFlipper;
+    public static class MyViewHolder extends RecyclerView.ViewHolder{
+        ViewFlipper mViewFlipper;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            mViewFlipper = itemView.findViewById(R.id.flipper);
+        }
     }
 
-    public ListAdapter(Context context, ArrayList<String[]> dataList) {
+    public RecyclerAdapter(Context context, ArrayList<String[]> dataList) {
         this.dataList = dataList;
         this.context = context;
     }
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(context).inflate(R.layout.listitem, parent, false);
+        return new MyViewHolder(itemView);
+    }
 
     @Override
-    public int getCount() {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof MyViewHolder) {
+            MyViewHolder myViewHolder = (MyViewHolder) holder;
+            setViewFlipper(myViewHolder.mViewFlipper, position);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
         return dataList.size();
     }
-
-    @Override
-    public Object getItem(int i) {
-        return dataList.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder viewHolder;
-        if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.listitem, viewGroup, false);
-            viewHolder = new ViewHolder();
-            //viewHolder.mViewFlipper = view.findViewById(R.id.listitem);
-            view.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) view.getTag();
-        }
-        viewHolder.mViewFlipper.removeAllViews();
-        ViewFlipper viewFlipper = new ViewFlipper(context, null);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        viewHolder.mViewFlipper.addView(viewFlipper, lp);
-        setViewFlipper(viewFlipper, i);
-        return view;
-    }
-
     private void setViewFlipper(ViewFlipper mViewFlipper, int position) {
 
         //添加要滚动的View

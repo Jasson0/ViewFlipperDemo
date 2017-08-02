@@ -2,6 +2,8 @@ package com.example.leon.textswitcherdemo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -13,14 +15,16 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
+    private RecyclerView recyclerView;
     private ArrayList<String[]> dataList = new ArrayList<>();
     private ListAdapter listAdapter;
+    private RecyclerAdapter recyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listView = (ListView) findViewById(R.id.leon);
+        recyclerView = (RecyclerView) findViewById(R.id.leon);
         String[] temp = new String[3];
         for (int j = 0; j < 3; j++) {
             temp[j] = "leonleon" + j;
@@ -36,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
             temp2[j] = "lululu" + j;
         }
         dataList.add(temp2);
-        listAdapter = new ListAdapter(this, dataList);
-        listView.setAdapter(listAdapter);
+        //listAdapter = new ListAdapter(this, dataList);
+        recyclerAdapter = new RecyclerAdapter(this, dataList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(recyclerAdapter);
     }
 
 }
